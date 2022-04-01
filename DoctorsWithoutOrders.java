@@ -20,7 +20,25 @@ public class DoctorsWithoutOrders{
   public static boolean canAllPatientsBeSeen(HashMap<String, Integer> doctors,
                             HashMap<String, Integer> patients,
                             HashMap<String, HashSet<String>> schedule) {
-    // ~ Your code goes here! ~
+
+    //base case - the map of patients is empty, returns True
+    if (patients.isEmpty()){
+      return true;
+    }
+
+    //if the patient has more hours than doctors - eliminate doctor
+    //else, subtract patient hours from doctor and update fake copy of DoctorsWithoutOrders
+    //canSeeAll()
+    //do want to edit the schedule parameter
+    //embedded for loop?
+    //need to update patient map and update doctors map
+      //problem will be easier to NOT edit the original doctors map so you can backtrack
+      //editing the copy of it
+    //copying a map
+    //HashMap<String, Integer> copy = new HashMap<>();
+    //copy.putAll(oldMap); this does not change the old map
+    //look through patients in a for loop, then call recursive inside
+    //array is hours for the patients
     return false;
   }
 
