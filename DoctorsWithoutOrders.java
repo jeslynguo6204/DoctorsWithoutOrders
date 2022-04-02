@@ -5,6 +5,12 @@ public class DoctorsWithoutOrders{
   public static void main(String[] args) {
     test1();
     test2();
+    test3();
+    test4();
+    test5();
+    test6();
+    test7();
+    test9();
   }
 
   /**
@@ -38,12 +44,13 @@ public class DoctorsWithoutOrders{
     newDoctors.putAll(doctors);
     HashMap<String, Integer> newPatients = new HashMap<>();
     newPatients.putAll(patients);
-    //System.out.println(newDoctors.keySet().toString());
-    //System.out.println(newPatients.keySet().toString() + "\n");
+
 
     //loops through the patients to determine if there is a doctor that can handle each
-    for (String currPatient: newPatients.keySet()){
-      Integer currPatientHours = newPatients.get(currPatient);
+    for (String currPatient: patients.keySet()){
+      //System.out.println(newDoctors.keySet().toString());
+      //System.out.println(newPatients.keySet().toString() + "\n");
+      Integer currPatientHours = patients.get(currPatient);
       //System.out.println(currPatient + ": " + currPatientHours);
       //if the patient has more hours than doctors - eliminate doctor as option for the patient
       String currDoctor = newDoctors.keySet().iterator().next();
@@ -53,12 +60,12 @@ public class DoctorsWithoutOrders{
         //patient cannot be seen by current doctor
         if (currPatientHours > currDoctorHours){
           newDoctors.remove(currDoctor);
-          canAllPatientsBeSeen(newDoctors, newPatients, schedule);
+          return canAllPatientsBeSeen(newDoctors, newPatients, schedule);
         }
         //if the patient can be seen by the current doctor, subtract patient hours from doctor
         currDoctorHours = currDoctorHours - currPatientHours;
         newPatients.remove(currPatient);
-        canAllPatientsBeSeen(newDoctors, newPatients, schedule);
+        return canAllPatientsBeSeen(newDoctors, newPatients, schedule);
     }
     //else, subtract patient hours from doctor and update fake copy of DoctorsWithoutOrders
     //canSeeAll()
@@ -67,9 +74,7 @@ public class DoctorsWithoutOrders{
     //need to update patient map and update doctors map
       //problem will be easier to NOT edit the original doctors map so you can backtrack
       //editing the copy of it
-    //copying a map
-    //HashMap<String, Integer> copy = new HashMap<>();
-    //copy.putAll(oldMap); this does not change the old map
+
     //look through patients in a for loop, then call recursive inside
     //array is hours for the patients
     return false;
