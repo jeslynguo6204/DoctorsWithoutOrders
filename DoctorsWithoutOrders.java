@@ -31,15 +31,10 @@ public class DoctorsWithoutOrders{
                             HashMap<String, Integer> patients,
                             HashMap<String, HashSet<String>> schedule) {
 
-    //base case 1- the map of patients is empty and doctors is not empty
-    if (patients.isEmpty() && !doctors.isEmpty()){
-      //System.out.println("BASE CASE TRUE");
+    //base case - the map of patients is empty
+    if (patients.isEmpty()){
+      //System.out.println("base case");
       return true;
-    }
-    //base case 2 - map of doctors is empty and patients is not
-    else if (doctors.isEmpty() && !patients.isEmpty()){
-      //System.out.println("BASE CASE FALSE");
-      return false;
     }
 
     //copy the map of doctors and patients to be passed through again
@@ -49,37 +44,28 @@ public class DoctorsWithoutOrders{
     newPatients.putAll(patients);
 
     //loops through the patients to determine if there is a doctor that can handle each
-    for (String currPatient: patients.keySet()){
-      //System.out.println(newDoctors.keySet().toString() + newDoctors.values().toString());
-      //System.out.println(newPatients.keySet().toString() + newPatients.values().toString() + "\n");
-      Integer currPatientHours = patients.get(currPatient);
-      //System.out.println(currPatient + ": " + currPatientHours);
+    for (String currDoctor: doctors.keySet()){
+      System.out.println(newDoctors.keySet().toString() + newDoctors.values().toString());
+      System.out.println(newPatients.keySet().toString() + newPatients.values().toString() + "\n");
+      Integer currDoctorHours = doctors.get(currDoctor);
+      System.out.println(currDoctor + ": " + currDoctorHours);
+
       //if the patient has more hours than doctors - eliminate doctor as option for the patient
-      //String currDoctor = newDoctors.keySet().iterator().next();
-      for (String currDoctor: doctors.keySet()){
-        Integer currDoctorHours = doctors.get(currDoctor);
+
+      for (String currPatient: patients.keySet()){
+        Integer currPatientHours = patients.get(currPatient);
         //Integer currDoctorHours = newDoctors.get(currDoctor);
-        //System.out.println(currDoctor + ": " + currDoctorHours);
-        //patient cannot be seen by current doctor
-        if (currPatientHours > currDoctorHours){
-          newDoctors.remove(currDoctor);
-          return canAllPatientsBeSeen(newDoctors, newPatients, schedule);
-        }
-        else{
-          //if the patient can be seen by the current doctor, subtract patient hours from doctor
-          //currDoctorHours = currDoctorHours - currPatientHours;
-          //need to update the doctor hours in the HashMap
+        System.out.println(currPatient + ": " + currPatientHours);
+
+        //patient can be seen by doctor
+        if (currPatientHours <= currDoctorHours){
+          newPatients.remove(currPatient); //patient is taken care of
           newDoctors.put(currDoctor, currDoctorHours-currPatientHours);
-          newPatients.remove(currPatient);
-          //System.out.println("THE CHANGE:");
-          //System.out.println(newDoctors.keySet().toString() + newDoctors.values().toString());
-          //System.out.println(newPatients.keySet().toString() + newPatients.values().toString() + "\n");
           return canAllPatientsBeSeen(newDoctors, newPatients, schedule);
         }
+        //patient cannot be seen by current doctor - automatically loops through to the next doctor
       }
     }
-
-    //do want to edit the schedule parameter
     //array is hours for the patients
     return false;
   }
