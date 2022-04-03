@@ -33,11 +33,10 @@ public class DoctorsWithoutOrders{
 
     //base case - the map of patients is empty
     if (patients.isEmpty()){
-      //System.out.println("base case");
       return true;
     }
 
-    //copy the map of doctors and patients to be passed through again
+    //copy the maps of doctors and patients to be manipulated through again
     HashMap<String, Integer> newDoctors = new HashMap<>();
     newDoctors.putAll(doctors);
     HashMap<String, Integer> newPatients = new HashMap<>();
@@ -47,31 +46,25 @@ public class DoctorsWithoutOrders{
     for (String currPatient: patients.keySet()){
       Integer currPatientHours = patients.get(currPatient);
 
-      //if the patient has more hours than doctors - eliminate doctor as option for the patient
-
       for (String currDoctor: doctors.keySet()){
         Integer currDoctorHours = doctors.get(currDoctor);
-        //System.out.println(newDoctors.keySet().toString() + newDoctors.values().toString());
-        //System.out.println(newPatients.keySet().toString() + newPatients.values().toString());
-        //Integer currDoctorHours = newDoctors.get(currDoctor);
-        //System.out.println(currDoctor + ": " + currDoctorHours );
-        //System.out.println(currPatient + ": " + currPatientHours+ "\n");
 
         //patient can be seen by doctor
         if (currPatientHours <= currDoctorHours){
-          //if doctor already exists in the schedule
+          //doctor already exists in the schedule
           if (schedule.containsKey(currDoctor)){
-            //update set of patients
-              HashSet<String> scheduledPatients = schedule.get(currDoctor);
-              scheduledPatients.add(currPatient);
-              schedule.put(currDoctor, scheduledPatients);
+            //update the doctor's set of patients
+            HashSet<String> scheduledPatients = schedule.get(currDoctor);
+            scheduledPatients.add(currPatient);
+            schedule.put(currDoctor, scheduledPatients);
           }
-            //if doctor does not exist in schedule yet
+          //doctor does not exist in schedule yet, current patient is their first
           else{
               schedule.put(currDoctor, new HashSet<>(Arrays.asList(currPatient)));
           }
           newPatients.remove(currPatient); //patient is taken care of
           newDoctors.put(currDoctor, currDoctorHours-currPatientHours);
+          //if continuing on this combination of doctors/patients works
           if (canAllPatientsBeSeen(newDoctors, newPatients, schedule)){
             //deletes any doctors with empty patients in schedule
             for (String doctor: schedule.keySet()){
@@ -81,17 +74,19 @@ public class DoctorsWithoutOrders{
             }
             return true;
           }
+          //if this combination of doctors/patients does not work,
+          //  automatically loops through to the next doctor
           HashSet<String> scheduledPatients = schedule.get(currDoctor);
           scheduledPatients.remove(currPatient);
           schedule.put(currDoctor, scheduledPatients);
         }
-        //patient cannot be seen by current doctor - automatically loops through to the next doctor
-        //accounts for recursive backtracking - must go back to previous/higher combination and
-          //restore doctors and patients
+        //recursive backtracking - must go back to previous/higher combination and
+        //  restore doctors and patients to previous step
         newDoctors.put(currDoctor, currDoctorHours);
         newPatients.put(currPatient, currPatientHours);
       }
     }
+
     //there are no possible combinations
     return false;
   }
@@ -110,7 +105,6 @@ public class DoctorsWithoutOrders{
 
     System.out.println(true == canAllPatientsBeSeen(doctors, patients, schedule));
     System.out.println();
-
   }
 
   public static void testCustom2(){
@@ -253,7 +247,7 @@ public class DoctorsWithoutOrders{
     }};
     System.out.println(true == canAllPatientsBeSeen(doctors, patients, schedule));
 
-    // Comment the code below back in to test your schedule parameter.
+    //schedule test
     System.out.println("Schedule result: " + schedule);
     HashMap<String, HashSet<String>> expectedSchedule = new HashMap<>();
     expectedSchedule.put("Dr. House", new HashSet<>(Arrays.asList("Patient A", "Patient B", "Patient C")));
@@ -280,7 +274,7 @@ public class DoctorsWithoutOrders{
     }};
     System.out.println(true == canAllPatientsBeSeen(doctors, patients, schedule));
 
-    // Comment the code below back in to test your schedule parameter.
+    //schedule test
     System.out.println("Schedule result: " + schedule);
     HashMap<String, HashSet<String>> expectedSchedule = new HashMap<>();
     expectedSchedule.put("Dr. House", new HashSet<>(Arrays.asList("Patient A", "Patient B", "Patient C")));
