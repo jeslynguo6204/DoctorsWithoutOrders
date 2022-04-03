@@ -44,28 +44,35 @@ public class DoctorsWithoutOrders{
     newPatients.putAll(patients);
 
     //loops through the patients to determine if there is a doctor that can handle each
-    for (String currDoctor: doctors.keySet()){
-      System.out.println(newDoctors.keySet().toString() + newDoctors.values().toString());
-      System.out.println(newPatients.keySet().toString() + newPatients.values().toString() + "\n");
-      Integer currDoctorHours = doctors.get(currDoctor);
-      System.out.println(currDoctor + ": " + currDoctorHours);
+    for (String currPatient: patients.keySet()){
+      Integer currPatientHours = patients.get(currPatient);
 
       //if the patient has more hours than doctors - eliminate doctor as option for the patient
 
-      for (String currPatient: patients.keySet()){
-        Integer currPatientHours = patients.get(currPatient);
+      for (String currDoctor: doctors.keySet()){
+        Integer currDoctorHours = doctors.get(currDoctor);
+        //System.out.println(newDoctors.keySet().toString() + newDoctors.values().toString());
+        //System.out.println(newPatients.keySet().toString() + newPatients.values().toString());
         //Integer currDoctorHours = newDoctors.get(currDoctor);
-        System.out.println(currPatient + ": " + currPatientHours);
+        //System.out.println(currDoctor + ": " + currDoctorHours );
+        //System.out.println(currPatient + ": " + currPatientHours+ "\n");
 
         //patient can be seen by doctor
         if (currPatientHours <= currDoctorHours){
           newPatients.remove(currPatient); //patient is taken care of
           newDoctors.put(currDoctor, currDoctorHours-currPatientHours);
-          return canAllPatientsBeSeen(newDoctors, newPatients, schedule);
+          if (canAllPatientsBeSeen(newDoctors, newPatients, schedule)){
+            return true;
+          }
         }
+        //accounts for recursive backtracking - must go back to previous/higher combination and
+          //restore doctors and patients
+        newDoctors.put(currDoctor, currDoctorHours);
+        newPatients.put(currPatient, currPatientHours);
         //patient cannot be seen by current doctor - automatically loops through to the next doctor
       }
     }
+
     //array is hours for the patients
     return false;
   }
